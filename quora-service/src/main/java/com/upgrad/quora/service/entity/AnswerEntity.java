@@ -35,7 +35,7 @@ public class AnswerEntity {
     private Timestamp date;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)//Delete cascade annotation to notify JPA to delete child data if parent is deleted
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 

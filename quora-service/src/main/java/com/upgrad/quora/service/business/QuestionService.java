@@ -110,7 +110,12 @@ public class QuestionService {
             throw new UserNotFoundException("USR-001","User with entered uuid whose question details are to be seen does not exist");
         }
 
-        return questionDao.getQuestionsUuidByUser(checkUserIfExists.getId());
+        List<QuestionEntity> checkIfResultExists = questionDao.getQuestionsByUser(checkUserIfExists.getId());
+        if (checkIfResultExists.isEmpty()){
+            throw new UserNotFoundException("USR-001","User haven't posted any question");
+        }
+
+        return checkIfResultExists;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

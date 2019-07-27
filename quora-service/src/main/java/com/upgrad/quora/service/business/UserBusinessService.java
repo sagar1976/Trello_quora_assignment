@@ -22,6 +22,7 @@ public class UserBusinessService {
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
 
+    //Service method for signing up user and validating username and email
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signup(UserEntity userEntity) throws  SignUpRestrictedException {
 

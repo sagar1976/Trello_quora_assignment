@@ -34,6 +34,7 @@ public class UserController {
     @Autowired
     private UserBusinessService userBusinessService;
 
+    //Controller method to sign up user for first time
     @RequestMapping(method = RequestMethod.POST, path = "user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> userSignup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
 
@@ -47,7 +48,7 @@ public class UserController {
         userEntity.setContactnumber(signupUserRequest.getContactNumber());
         userEntity.setDob(signupUserRequest.getDob());
         userEntity.setSalt("1234abc");
-        userEntity.setRole("nonadmin");
+        userEntity.setRole("nonadmin");// setting up generic role of non admin for every signed up user
         userEntity.setCountry(signupUserRequest.getCountry());
         userEntity.setAboutme(signupUserRequest.getAboutMe());
 
@@ -57,6 +58,7 @@ public class UserController {
         return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
     }
 
+    //Controller method to enable login for signed up users
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> login(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
         byte[] decode = Base64.getMimeDecoder().decode(authorization.split("Basic")[1]);
@@ -75,6 +77,7 @@ public class UserController {
 
     }
 
+    //Controller method to sign out the user.
     @RequestMapping(method = RequestMethod.POST, path = "/user/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignoutResponse> logout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException {
 

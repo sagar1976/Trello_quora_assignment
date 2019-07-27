@@ -24,10 +24,11 @@ public class QuestionService {
     @Autowired
     private UserDao userDao;
 
+    //Service method to create question
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity createQuestion(final String authorization, QuestionEntity questionEntity ) throws AuthorizationFailedException {
 
-        UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
+        UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);//Exceptions are used to filters out user who have not signed in or have signed out.
         if(userAuthEntity == null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         }
@@ -45,7 +46,7 @@ public class QuestionService {
 
     }
 
-
+    //This method collects all the questions posted by all users.
     public List<QuestionEntity> getAllQuestions(final String authorization) throws AuthorizationFailedException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
@@ -60,6 +61,7 @@ public class QuestionService {
         return questionDao.getQuestions();
     }
 
+    //This method gets the Uuids for the questions which are to be retreived.
     public List<QuestionEntity> getAllQuestionsUuid(final String authorization) throws AuthorizationFailedException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
@@ -74,7 +76,7 @@ public class QuestionService {
         return questionDao.getQuestionsUuid();
     }
 
-
+    //This method retreives details of all questions by user, means user who has posted those questions.
     public List<QuestionEntity> getAllQuestionsByUser(final String authorization, final String userId) throws AuthorizationFailedException, UserNotFoundException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
@@ -91,7 +93,7 @@ public class QuestionService {
             throw new UserNotFoundException("USR-001","User with entered uuid whose question details are to be seen does not exist");
         }
 
-        List<QuestionEntity> checkIfResultExists = questionDao.getQuestionsByUser(checkUserIfExists.getId());
+        List<QuestionEntity> checkIfResultExists = questionDao.getQuestionsByUser(checkUserIfExists.getId());//This is specially added as if user havent posted any question it was retreiving empty records
         if (checkIfResultExists.isEmpty()){
             throw new UserNotFoundException("USR-001","User havent posted any question");
         }
@@ -118,6 +120,7 @@ public class QuestionService {
         return questionDao.getQuestionsUuidByUser(checkUserIfExists.getId());
     }
 
+    //This method is used to edit question
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity questionEdit(final String authorization, final QuestionEntity questionEntity) throws AuthorizationFailedException, InvalidQuestionException {
 
@@ -149,6 +152,7 @@ public class QuestionService {
 
     }
 
+    //This method checks various criteria like owner of question etc before deleting the question
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity deleteQuestion(final QuestionEntity questionEntity, final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 
@@ -181,6 +185,7 @@ public class QuestionService {
         return questionEntity;
     }
 
+    //Method to get question by sending Uuid
     public QuestionEntity getQuestionById(final String authorization, final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);

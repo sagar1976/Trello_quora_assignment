@@ -20,6 +20,7 @@ public class CommonController {
     @Autowired
     private UserAdminBusinessService userAdminBusinessService;
 
+    //Controller method to get user details using User Id
     @RequestMapping(method = RequestMethod.GET, path = "/userprofile/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userUuid,
                                                        @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {

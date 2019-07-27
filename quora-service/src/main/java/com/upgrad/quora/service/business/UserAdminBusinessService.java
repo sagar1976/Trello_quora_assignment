@@ -16,6 +16,7 @@ public class UserAdminBusinessService {
     @Autowired
     private UserDao userDao;
 
+    //Service method to get user
     public UserAuthEntity getUser(final String userUuid, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorizationToken);
@@ -50,6 +51,7 @@ public class UserAdminBusinessService {
         return userAuthEntity;
     }
 
+    //Service method to delete a user
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity deleteUser(final String userUuid, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException {
 

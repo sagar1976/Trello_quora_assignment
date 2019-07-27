@@ -24,6 +24,7 @@ public class AuthenticationService {
     @Autowired
     private PasswordCryptographyProvider CryptographyProvider;
 
+    //Service method to validate username and password
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
         UserEntity userEntity = userDao.getUserByUserName(username);
@@ -56,6 +57,7 @@ public class AuthenticationService {
         }
     }
 
+    //Service method for logging out users
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity userLogout(String accesstoken) throws SignOutRestrictedException {
 
@@ -63,9 +65,8 @@ public class AuthenticationService {
         if(checkAccessToken == null){
             throw new SignOutRestrictedException("SGR-001","User is not Signed in");
         }
-
         checkAccessToken.setLogoutAt(ZonedDateTime.now());
-        userDao.updateLogoutTime(checkAccessToken);
+        userDao.updateLogoutTime(checkAccessToken);//updating logout time in database through Dao
         return checkAccessToken;
     }
 

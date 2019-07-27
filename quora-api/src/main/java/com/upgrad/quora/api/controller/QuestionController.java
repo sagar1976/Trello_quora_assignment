@@ -1,14 +1,10 @@
 package com.upgrad.quora.api.controller;
 
-
 import com.upgrad.quora.api.model.*;
-import com.upgrad.quora.service.business.AuthenticationService;
 import com.upgrad.quora.service.business.QuestionService;
 import com.upgrad.quora.service.business.UserAdminBusinessService;
 import com.upgrad.quora.service.entity.QuestionEntity;
-import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
-import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
@@ -34,17 +30,17 @@ public class QuestionController {
     @Autowired
     private UserAdminBusinessService userAdminBusinessService;
 
-
+    //Method to create question
     @RequestMapping(method = RequestMethod.POST, path = "/question/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionResponse> createQuestion(@RequestHeader("authorization") final String authorization, final QuestionRequest questionRequest) throws AuthorizationFailedException {
 
         String [] bearerToken = authorization.split("Bearer ");
         final QuestionEntity questionEntity = new QuestionEntity();
-        questionEntity.setUuid(UUID.randomUUID().toString());
-        questionEntity.setContent(questionRequest.getContent());
+        questionEntity.setUuid(UUID.randomUUID().toString());//Uuid is set as we are sheilding real ids from exposing
+        questionEntity.setContent(questionRequest.getContent());//Question details are set to Question Entity object
         Date date= new Date();
         long time = date.getTime();
-        Timestamp ts = new Timestamp(time);
+        Timestamp ts = new Timestamp(time);// timestamp datatype used here
         questionEntity.setDate(ts);
 
         QuestionEntity questionCreated = questionService.createQuestion(bearerToken[1], questionEntity);
@@ -56,15 +52,16 @@ public class QuestionController {
 
     }
 
+    //Controller method to get all questions
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionDetailsResponse> getAllQuestions(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
 
         String [] bearerToken = authorization.split("Bearer ");
-        List<QuestionEntity> allQuestions = questionService.getAllQuestions(bearerToken[1]);
+        List<QuestionEntity> allQuestions = questionService.getAllQuestions(bearerToken[1]);// questionService used to get all Questions
 
-        List<QuestionEntity> questionUuid = questionService.getAllQuestionsUuid(bearerToken[1]);
+        List<QuestionEntity> questionUuid = questionService.getAllQuestionsUuid(bearerToken[1]);//Used bean service to get Uuids for retrieved questions
 
-        QuestionDetailsResponse questionDetailsResponse = new QuestionDetailsResponse().id(questionUuid.toString()).content(allQuestions.toString());
+        QuestionDetailsResponse questionDetailsResponse = new QuestionDetailsResponse().id(questionUuid.toString()).content(allQuestions.toString());//toString() used to display in response
 
         return new ResponseEntity<QuestionDetailsResponse>(questionDetailsResponse, HttpStatus.OK);
     }
@@ -82,6 +79,7 @@ public class QuestionController {
         return new ResponseEntity<QuestionDetailsResponse>(questionDetailsResponse, HttpStatus.OK);
     }
 
+    //Controller method to Edit questions
     @RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionEditResponse> editQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization, final QuestionEditRequest questionEditRequest) throws AuthorizationFailedException, InvalidQuestionException {
 
@@ -101,6 +99,7 @@ public class QuestionController {
         return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
     }
 
+    //Controller method to delete a question
     @RequestMapping(method = RequestMethod.DELETE, path ="/question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionDeleteResponse> deleteQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 

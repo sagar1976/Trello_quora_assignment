@@ -20,31 +20,31 @@ public class QuestionDao {
         return questionEntity;
     }
 
+    //This method returns list of all questions
     public List<QuestionEntity> getQuestions(){
 
         try{
-            Query q = entityManager.createNativeQuery("SELECT u.content FROM Question u");
+            Query q = entityManager.createNativeQuery("SELECT u.content FROM Question u");//get content means questions details from DB using native query
             List<QuestionEntity> content = q.getResultList();
             return  content;
-
         } catch (NoResultException nre ){
             return  null;
         }
     }
 
+    //This method returns Uuids required to be sent to response method in controller for all the questions probed here.
     public List<QuestionEntity> getQuestionsUuid(){
 
         try{
             Query q = entityManager.createNativeQuery("SELECT u.uuid FROM Question u");
             List<QuestionEntity> content = q.getResultList();
             return  content;
-
         } catch (NoResultException nre ){
             return  null;
         }
     }
 
-
+    //This method retreives list of all questions posted by user
     public List<QuestionEntity> getQuestionsByUser(long userId){
 
         try{
@@ -63,7 +63,6 @@ public class QuestionDao {
             Query q = entityManager.createNativeQuery("SELECT u.uuid FROM Question u WHERE u.user_id = ?").setParameter(1, userId);
             List<QuestionEntity> content = q.getResultList();
             return  content;
-
         } catch (NoResultException nre ){
             return  null;
         }
@@ -79,7 +78,6 @@ public class QuestionDao {
     }
 
     public QuestionEntity updateQuestion(QuestionEntity questionEntity){
-
         entityManager.merge(questionEntity);
         return questionEntity;
     }

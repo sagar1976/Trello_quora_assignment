@@ -20,7 +20,7 @@ public class AnswerDao {
         return answerEntity;
     }
 
-    public AnswerEntity getIdByUuid(final String Uuid) {
+    public AnswerEntity getIdByUuid(final String Uuid) {//getting user id by passing Uuid of answer
 
         try {
             return entityManager.createNamedQuery("answerByUuid", AnswerEntity.class).setParameter("uuid", Uuid).getSingleResult();
@@ -41,7 +41,7 @@ public class AnswerDao {
     }
 
 
-    public List<AnswerEntity> getAllAnswer(long questionId) {
+    public List<AnswerEntity> getAllAnswer(long questionId) {//getting answer/s details or content for the required question
 
         try{
             Query q = entityManager.createNativeQuery("SELECT u.ans FROM Answer u JOIN Question t on u.question_id = t.id WHERE u.question_id = ?").setParameter(1, questionId);
@@ -53,7 +53,7 @@ public class AnswerDao {
         }
     }
 
-    public List<AnswerEntity> getAllAnswerId(long questionId) {
+    public List<AnswerEntity> getAllAnswerId(long questionId) {//getting answers uuid by passing question Id
 
         try{
             Query q = entityManager.createNativeQuery("SELECT u.uuid FROM Answer u JOIN Question t on u.question_id = t.id WHERE u.question_id = ?").setParameter(1, questionId);

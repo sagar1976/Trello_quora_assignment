@@ -29,11 +29,12 @@ public class AnswerService {
     @Autowired
     private UserDao userDao;
 
+    //Service method to create answer
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity createAnswer(final String authorization, final AnswerEntity answerEntity, final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
         QuestionEntity checkQuestionExistence = questionDao.getIdByUuid(questionId);
-        if(checkQuestionExistence == null){
+        if(checkQuestionExistence == null){//to check if entered question is valid or not
             throw new InvalidQuestionException("QUES-001","The question entered is invalid");
         }
 
@@ -54,6 +55,7 @@ public class AnswerService {
 
     }
 
+    //Service method to edit an answer
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity editAnswer(final String authorization, final String answerId, final AnswerEntity answerEntity) throws AuthorizationFailedException, AnswerNotFoundException {
 
@@ -86,6 +88,7 @@ public class AnswerService {
 
     }
 
+    //Service method to delete Answer
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity deleteAnswer(final String authorization, final AnswerEntity answerEntity) throws AuthorizationFailedException, AnswerNotFoundException {
 
@@ -105,7 +108,7 @@ public class AnswerService {
         }
 
         UserEntity user = userAuthEntity.getUser();
-        String role = user.getRole();
+        String role = user.getRole();//getting role details from UserEntity which is used to validate if user is admin or not
         if(role.equals("nonadmin") && checkAnswerUuid.getUser() != userAuthEntity.getUser()){
             throw new AuthorizationFailedException("ATHR-003","Only the answer owner or admin can delete the answer");
         }
@@ -119,6 +122,7 @@ public class AnswerService {
 
     }
 
+    //Service method to get list of all answers
     public List<AnswerEntity> getAllAnswers(final String authorization, final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
@@ -140,7 +144,7 @@ public class AnswerService {
 
     }
 
-
+    //Service method to get list of all answers by questionId
     public List<AnswerEntity> getAllAnswersId(final String authorization, final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
